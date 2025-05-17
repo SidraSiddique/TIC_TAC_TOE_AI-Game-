@@ -72,3 +72,112 @@ def winner(board):
         return X
     elif board[0][0] == board[0][1] and board[0][0] == board[0][2] and board[0][0] == O:
         return O
+        elif board[1][0] == board[1][1] and board[1][0] == board[1][2] and board[1][0] == X:
+        return X
+    elif board[1][0] == board[1][1] and board[1][0] == board[1][2] and board[1][0] == O:
+        return O
+
+    elif board[2][0] == board[2][1] and board[2][0] == board[2][2] and board[2][0] == X:
+        return X
+    elif board[2][0] == board[2][1] and board[2][0] == board[2][2] and board[2][0] == O:
+        return O
+
+    elif board[0][0] == board[1][0] and board[1][0] == board[2][0] and board[0][0] == X:
+        return X
+    elif board[0][0] == board[1][0] and board[1][0] == board[2][0] and board[0][0] == O:
+        return O
+
+    elif board[0][1] == board[1][1] and board[1][1] == board[2][1] and board[0][1] == X:
+        return X
+    elif board[0][1] == board[1][1] and board[1][1] == board[2][1] and board[0][1] == O:
+        return O
+
+    elif board[0][2] == board[1][2] and board[1][2] == board[2][2] and board[0][2] == X:
+        return X
+    elif board[0][2] == board[1][2] and board[1][2] == board[2][2] and board[0][2] == O:
+        return O
+
+    elif board[0][0] == board[1][1] and board[1][1] == board[2][2] and board[0][0] == X:
+        return X
+    elif board[0][0] == board[1][1] and board[1][1] == board[2][2] and board[0][0] == O:
+        return O
+
+    elif board[0][2] == board[1][1] and board[1][1] == board[2][0] and board[0][2] == X:
+        return X
+    elif board[0][2] == board[1][1] and board[1][1] == board[2][0] and board[0][2] == O:
+        return O
+    else:
+        return None
+
+
+def terminal(board):
+    """
+    Returns True if game is over, False otherwise.
+    """
+    a = winner(board)
+    if a != None:
+        return True
+
+    x = actions(board)
+    if len(x) > 0:
+        return False
+    return True
+
+
+
+def utility(board):
+    """
+    Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
+    """
+    if terminal(board):
+        a = winner(board)
+        if a == X:
+            return 1
+        elif a == O:
+            return -1
+        else:
+            return 0
+
+def minimizing(board):
+    if terminal(board):
+        return utility(board)
+    score = 800
+    for action in actions(board):
+        s = maximizing(result(board,action))
+        if s < score:
+            score = s
+    return score
+def maximizing(board):
+    if terminal(board):
+        return utility(board)
+
+    score = -800
+    for action in actions(board):
+        s = minimizing(result(board, action))
+        if s > score:
+            score = s
+    return score
+
+def minimax(board):
+    """
+    Returns the optimal action for the current player on the board.
+    """
+    if terminal(board):
+        return None
+    current_player = player(board)
+    key = (0, 0)
+    if current_player == X:
+        score = -800
+        for action in actions(board):
+            s = minimizing(result(board, action))
+            if s > score:
+                score = s
+                key = action
+    else:
+        score = 800
+        for action in actions(board):
+            s = maximizing(result(board, action))
+            if s < score:
+                score = s
+                key = action
+    return key
